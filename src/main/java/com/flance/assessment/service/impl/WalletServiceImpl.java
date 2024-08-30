@@ -105,7 +105,6 @@ public class WalletServiceImpl implements WalletService {
         HeaderBase headerBase = new HeaderBase();
         FindWalletResponse response = new FindWalletResponse();
 
-        // Validate email format
         boolean validatorEmail = Validator.validateEmail(request.getEmail());
         if (!validatorEmail) {
             headerBase.setResponseMessage("Invalid email format");
@@ -166,16 +165,12 @@ public class WalletServiceImpl implements WalletService {
         LinkBankAccountResponse response = new LinkBankAccountResponse();
 
         Validator.validateProperty(request.getBank(), "Bank cannot be empty");
-//        Validator.validateProperty(request.getWalletId(), "Wallet ID cannot be empty");
         Validator.validateProperty(request.getAccountName(), "Account name cannot be empty");
         Validator.validateProperty(request.getAccountNumber(), "Account number cannot be empty");
 
         try {
-            // Handle the wallet lookup using Optional
             Wallet wallet = walletRepository.findByid(request.getWalletId());
-//                    .orElseThrow(() -> new RuntimeException("No wallet found with this ID"));
 
-            // Check for existing account with the same bank
             Optional<BankAccount> existingAccount = bankAccRepository.findByAccountNumberAndBank(request.getAccountNumber(), request.getBank());
             if (existingAccount.isPresent()) {
                 headerBase.setResponseCode("400");
@@ -185,7 +180,6 @@ public class WalletServiceImpl implements WalletService {
                 return ResponseEntity.badRequest().body(response);
             }
 
-            // Proceed with linking the bank account
             BankAccount bankAccount = new BankAccount();
             bankAccount.setAccountName(request.getAccountName());
             bankAccount.setAccountNumber(request.getAccountNumber());
@@ -228,18 +222,10 @@ public class WalletServiceImpl implements WalletService {
     public ResponseEntity<FindBankResponse> getBankAccountsByWallet(FindBankRequest request, HttpServletRequest servletRequest){
         HeaderBase headerBase = new HeaderBase();
         FindBankResponse response =new FindBankResponse();
-//        Validator.validateProperty(request.getWalletId().toString(), "input wallet Id");
         BankAccount existingId =  bankAccRepository.findByid(request.getWalletId());
         val b = existingId.toString();
         try{
-//            if (re.equals()){
-//                headerBase.setResponseCode("404");
-//                headerBase.setResponseMessage("Id not found");
-//                log.info("Invalid Id: Id is not found");
-//                response.setHeaderBase(headerBase);
-//                return ResponseEntity.badRequest().body(response);
-//
-//            }
+
 
            BankAccount bankAccount =  bankAccRepository.findByid(request.getWalletId());
            headerBase.setResponseMessage("Banks Retrieved Successfully");
