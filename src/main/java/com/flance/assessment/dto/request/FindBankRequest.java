@@ -5,5 +5,5 @@ import lombok.Data;
 
 @Data
 public class FindBankRequest {
-    private Long  walletId;
+    private Long walletId;
 }
